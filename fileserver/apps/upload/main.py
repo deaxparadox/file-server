@@ -1,0 +1,133 @@
+from typing import Annotated
+import os
+from fastapi import APIRouter, File, UploadFile, Depends
+from fastapi.responses import Response, JSONResponse
+from fastapi import status
+from sqlalchemy.orm import Session
+import aiofiles
+
+from core.database import get_db
+from core import settings
+from apps.upload import crud, schema, helpers
+
+upload_router = APIRouter(
+    prefix="/u",
+    tags=['upload']
+)
+
+@upload_router.get(
+    "/",
+    response_model=schema.ResponseListUploadModel
+)
+async def upload_message(db: Session = Depends(get_db)):
+    uploads = await crud.get_all(db=db)
+    # return {"message": "upload here, using post method"}
+    return {
+        "uploaded": uploads
+    }
+
+
+@upload_router.post(
+    "/", 
+    response_model=schema.ResponseUploadModel,
+    status_code=status.HTTP_202_ACCEPTED
+)
+async def upload_file(
+    file: Annotated[UploadFile, File(description="Upload a file.")] = None, 
+    db: Session =  Depends(get_db)
+):
+    
+    # If no file uploaded
+    if not file:
+        return JSONResponse({
+            "message": "No file uploaded"
+        }, status_code=status.HTTP_400_BAD_REQUEST)
+
+    filename = helpers.generate_filename(file.filename)
+    
+    
+    uploadsize = 64 * 1024
+    # filesize = file.size
+    # block = filesize // uploadsize
+
+    try:
+        total_length = 0
+        async with aiofiles.open(filename, 'wb') as uf:
+            while content := await file.read(uploadsize):
+                total_length+=len(content)
+                await uf.write(content)
+
+        # after successful upload
+        # generate database `fid`
+        db_upload = await crud.create_upload(filename=file.filename, db=db)
+    
+    except Exception as e:
+        # if any exception occurs, during upload
+        # return error message, with code `500`
+        return {
+            JSONResponse({
+                "message": "There was an error uploading the file."
+            }, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        }
+    finally:
+        await file.close()
+        
+    return db_upload
+
+
+
+@upload_router.post(
+    "/m/", 
+    response_model=schema.ResponseListUploadModel,
+    status_code=status.HTTP_202_ACCEPTED
+)
+async def upload_multiple_file(
+    files: Annotated[list[UploadFile], File(description="Multiple files uploads")], 
+    db: Session =  Depends(get_db)
+):
+    
+    # If no file uploaded
+    if not files:
+        return JSONResponse({
+            "message": "No file uploaded"
+        }, status_code=status.HTTP_400_BAD_REQUEST)
+
+    # filename = helpers.generate_filename(files)
+    
+    
+    uploadsize = 64 * 1024
+    # filesize = file.size
+    # block = filesize // uploadsize
+
+
+
+    uploaded_files = []
+    for file in files:
+        try:    
+            print(file.filename)
+            filename = helpers.generate_filename(file.filename)
+            total_length = 0
+            async with aiofiles.open(filename, 'wb') as uf:
+                while content := await file.read(uploadsize):
+                    total_length+=len(content)
+                    await uf.write(content)
+
+            # after successful upload
+            # generate database `fid`
+            db_upload = await crud.create_upload(filename=file.filename, db=db)
+            uploaded_files.append(db_upload)
+            
+        except Exception as e:
+            # if any exception occurs, during upload
+            # return error message, with code `500`
+            return {
+                JSONResponse({
+                    "message": "There was an error uploading the file."
+                }, status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            }
+        finally:
+            await file.close()
+            
+    return {
+        "uploaded": uploaded_files
+    }

@@ -163,4 +163,6 @@ cython_debug/
 
 
 # remove the uploading folder
-/uploads
+uploads
+**/migrations/versions/**
+sql_app.db

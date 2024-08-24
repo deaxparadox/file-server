@@ -1,8 +1,8 @@
 services:
   upload:
-    build: ./project
+    build: ./fileserver
     container_name: file-server
     ports:
       - 9000:9000
-    volumes:
-      - ./project:/home/paradox/project
+    # volumes:
+      # - ./project:/home/paradox/project

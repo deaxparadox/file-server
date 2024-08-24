@@ -5,7 +5,7 @@ from rich import print
 BASE_DIR = Path("__file__").resolve().parent
 
 
-UPLOAD_DIR = BASE_DIR.parent.parent / "uploads"
+UPLOAD_DIR = BASE_DIR / "uploads"
 
 
 # Create upload path is not exist.
