@@ -2,9 +2,9 @@ import requests
 from  concurrent.futures import ProcessPoolExecutor
 
 
-filename1 = r'/home/paradox/Documents/github/file-server/uploads/permute_brackets.py'
+filename1 = r'/home/paradox/Documents/permute_brackets.py'
 filename2 = r"/home/paradox/Downloads/Python for Probability, Statistics, and Machine Learning ( PDFDrive ).pdf"
-url = 'http://127.0.0.1:9000/upload/'
+url = 'http://127.0.0.1:9000/u/'
 files = [filename1] * 1001
 
 def upload(file, url=url):
