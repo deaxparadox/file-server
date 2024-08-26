@@ -9,6 +9,7 @@ import aiofiles
 from core.database import get_db
 from core import settings
 from apps.upload import crud, schema, helpers
+from apps.dependencies import UploadDependency
 
 upload_router = APIRouter(
     prefix="/u",
@@ -19,8 +20,10 @@ upload_router = APIRouter(
     "/",
     response_model=schema.ResponseListUploadModel
 )
-async def upload_message(db: Session = Depends(get_db)):
-    uploads = await crud.get_all(db=db)
+async def upload_message(
+    dep = Depends(UploadDependency)
+):
+    uploads = await crud.get_all(db=dep.db)
     # return {"message": "upload here, using post method"}
     return {
         "uploaded": uploads
