@@ -3,6 +3,11 @@ services:
     build: ./fileserver
     container_name: file-server
     ports:
-      - 9000:9000
+      - "9000:9000"
+    environment:
+      - PORT=9000
+      - WORKERS=5
+      - HOST=0.0.0.0
+      - DOCKER=1
     # volumes:
       # - ./project:/home/paradox/project

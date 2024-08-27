@@ -6,7 +6,7 @@ import uvicorn
 from main import app
 
 
-# CONFIGURATIONS
+# SERVER CONFIGURATIONS
 
 RELOAD = False
 WORKERS = os.getenv("WORKERS")
@@ -23,13 +23,27 @@ if not PORT:
 else:
     PORT = int(PORT)
 
+
+# DOCKER CONFIGURATION
+DOCKER = os.getenv("DOCKER")
+if DOCKER:
+    HOST = os.getenv("HOST")
+
 def main():
-    uvicorn.run(
-        "main:app",
-        port=PORT,
-        reload=RELOAD,
-        workers=WORKERS,
-    )
+    if DOCKER:
+        uvicorn.run(
+            "main:app",
+            port=PORT,
+            workers=WORKERS,
+            host=HOST
+        )
+    else:    
+        uvicorn.run(
+            "main:app",
+            port=PORT,
+            reload=RELOAD,
+            workers=WORKERS,
+        )
     
 if __name__ == "__main__":
     main()
