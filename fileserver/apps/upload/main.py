@@ -12,12 +12,12 @@ from apps.upload import crud, schema, helpers
 from apps.dependencies import UploadDependency
 
 upload_router = APIRouter(
-    prefix="/u",
+    prefix="/v1",
     tags=['upload']
 )
 
 @upload_router.get(
-    "/",
+    "/u/",
     response_model=schema.ResponseListUploadModel
 )
 async def upload_message(
@@ -31,7 +31,7 @@ async def upload_message(
 
 
 @upload_router.post(
-    "/", 
+    "/u/", 
     response_model=schema.ResponseUploadModel,
     status_code=status.HTTP_202_ACCEPTED
 )
@@ -80,7 +80,7 @@ async def upload_file(
 
 
 @upload_router.post(
-    "/m/", 
+    "/u/m/", 
     response_model=schema.ResponseListUploadModel,
     status_code=status.HTTP_202_ACCEPTED
 )

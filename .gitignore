@@ -166,3 +166,51 @@ cython_debug/
 uploads
 **/migrations/versions/**
 sql_app.db
+
+
+
+
+# Angular
+
+# See https://docs.github.com/get-started/getting-started-with-git/ignoring-files for more about ignoring files.
+
+# Compiled output
+/appui/dist
+/appui/tmp
+/appui/out-tsc
+/appui/bazel-out
+
+# Node
+node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs and editors
+.idea/
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# Visual Studio Code
+appui/.vscode/*
+!appui/.vscode/settings.json
+!appui/.vscode/tasks.json
+!appui/.vscode/launch.json
+!appui/.vscode/extensions.json
+.history/*
+
+# Miscellaneous
+/appui/.angular/cache
+/appui/.sass-cache/
+/appui/connect.lock
+/appui/coverage
+/appui/libpeerconnection.log
+/testem.log
+/appui/typings
+
+# System files
+.DS_Store
+Thumbs.db
