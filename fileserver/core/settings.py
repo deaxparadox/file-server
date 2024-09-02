@@ -29,11 +29,13 @@ ALLOWED_ORIGINS = [
 
 ALLOWED_METHODS = [
     "GET",
-    "POST"
+    # "POST",
+    "OPTIONS"
 ]
 
 ALLOWED_HEADERS = [
     "text/json",
     "application/json",
-    'multipart/form-data'
+    'multipart/form-data',
+    "text/plain",
 ]

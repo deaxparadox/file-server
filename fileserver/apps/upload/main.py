@@ -9,11 +9,11 @@ import aiofiles
 from core.database import get_db
 from core import settings
 from apps.upload import crud, schema, helpers
-from apps.dependencies import UploadDependency
+from apps.dependencies import UploadDependency, content_type_multipart_form_data
 
 upload_router = APIRouter(
     prefix="/v1",
-    tags=['upload']
+    tags=['upload'],
 )
 
 @upload_router.get(
@@ -33,11 +33,12 @@ async def upload_message(
 @upload_router.post(
     "/u/", 
     response_model=schema.ResponseUploadModel,
-    status_code=status.HTTP_202_ACCEPTED
+    status_code=status.HTTP_202_ACCEPTED,
 )
 async def upload_file(
     file: Annotated[UploadFile, File(description="Upload a file.")] = None, 
-    db: Session =  Depends(get_db)
+    db: Session =  Depends(get_db),
+    check_content_type = Depends(content_type_multipart_form_data)
 ):
     
     # If no file uploaded
@@ -134,3 +135,8 @@ async def upload_multiple_file(
     return {
         "uploaded": uploaded_files
     }
+    
+    
+# @upload_router.delete("/u/")
+# def delete_upload_file():
+#     return {}
