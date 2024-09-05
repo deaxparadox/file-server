@@ -164,7 +164,7 @@ cython_debug/
 
 # remove the uploading folder
 uploads
-**/migrations/versions/**
+/fileserver/alembic/versions/*
 sql_app.db
 
 

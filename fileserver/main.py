@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 # upload application
 from apps.upload.main import upload_router
 from apps.download.main import download_router
+from apps.authentication.main import auth_router
 
 # setting
 from core import settings
@@ -24,6 +25,7 @@ app = FastAPI()
 
 app.include_router(upload_router)
 app.include_router(download_router)
+app.include_router(auth_router)
 
 
 app.add_middleware(
